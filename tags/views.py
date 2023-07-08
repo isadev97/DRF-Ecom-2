@@ -29,7 +29,7 @@ class CreateTagView(APIView):
                 slug=slugify(name)
             )
             # IMPORTANT !!!
-            # USE CASE 1
+            # USE CASE 2
             # for read operation we use instance = tag object, to convert orm data into json
             json_data = ReadTagsSerializer(instance=tag_object).data
             return Response(json_data, status=status.HTTP_201_CREATED)
