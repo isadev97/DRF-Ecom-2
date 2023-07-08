@@ -19,7 +19,7 @@ class CreateTagView(APIView):
     def post(self, request):
         # IMPORTANT !!!
         # USE CASE 1
-        # for client side data validation we use data = request data
+        # for client side data validation we use Serializer(data=request.data)
         serializer = WriteTagsSerializer(data=request.data)
         if serializer.is_valid():
             # if the serializer is valid we create the tag from valid data
@@ -30,7 +30,7 @@ class CreateTagView(APIView):
             )
             # IMPORTANT !!!
             # USE CASE 2
-            # for read operation we use instance = tag object, to convert orm data into json
+            # for read operation we use instance = tag object, to convert orm data into json, Serializer(instance=object)
             json_data = ReadTagsSerializer(instance=tag_object).data
             return Response(json_data, status=status.HTTP_201_CREATED)
         else:
