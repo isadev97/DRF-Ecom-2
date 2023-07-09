@@ -6,6 +6,7 @@ from tags.models import Tags
 from tags.serializers import WriteTagsSerializer, ReadTagsSerializer
 from django.utils.text import slugify
 from django.core.cache import cache
+from tags.utils import StandardResultsSetPagination
 
 '''
 USE CASE 1
@@ -87,3 +88,5 @@ class DetailTagV2View(RetrieveAPIView):
 class ListTagV2View(ListAPIView):
     queryset = Tags.objects.all()
     serializer_class = ReadTagsSerializer
+    pagination_class = StandardResultsSetPagination
+    
