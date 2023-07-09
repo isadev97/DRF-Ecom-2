@@ -4,6 +4,7 @@ from rest_framework import status
 from tags.models import Tags
 from tags.serializers import WriteTagsSerializer, ReadTagsSerializer
 from django.utils.text import slugify
+from django.core.cache import cache
 
 '''
 USE CASE 1
@@ -43,11 +44,26 @@ class DetailTagView(APIView):
 
     def get(self, request, slug):
         try:
+            cache_key = "tags" + str(slug)
+            cached_data = cache.get(cache_key)
+            if cached_data is not None:
+                print("coming from cache")
+                return Response(cached_data, status=status.HTTP_200_OK)
             tag_object = Tags.objects.get(slug=slug)
             response_data = ReadTagsSerializer(instance=tag_object).data 
+            print("not coming from cache")
+            print("generating the data")
+            print("store it in the cache")
+            cache.set(cache_key, response_data)
             return Response(response_data, status=status.HTTP_200_OK)
         except Tags.DoesNotExist:
             return Response({"message": "Tag not found"}, status=status.HTTP_404_NOT_FOUND)
         except Tags.MultipleObjectsReturned:
             return Response({"message": "Multiple tags exist for the given slug"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# read operations
+# write operations
+# high number of read operations and less number of write operations is ideal for a cache
 
