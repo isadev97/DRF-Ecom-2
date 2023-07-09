@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.generics import RetrieveAPIView, ListAPIView
 from tags.models import Tags
 from tags.serializers import WriteTagsSerializer, ReadTagsSerializer
 from django.utils.text import slugify
@@ -76,3 +77,13 @@ class ListTagView(APIView):
             return Response(response_data, status=status.HTTP_200_OK)
         except:
             return Response({"message": "Unable to fetch tags list"}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class DetailTagV2View(RetrieveAPIView):
+    queryset = Tags.objects.all()
+    serializer_class = ReadTagsSerializer
+    lookup_field = "slug"
+
+class ListTagV2View(ListAPIView):
+    queryset = Tags.objects.all()
+    serializer_class = ReadTagsSerializer
