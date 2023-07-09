@@ -40,6 +40,11 @@ class CreateTagView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# read operations
+# write operations
+# high number of read operations and less number of write operations is ideal for a cache
+
+
 class DetailTagView(APIView):
 
     def get(self, request, slug):
@@ -62,8 +67,12 @@ class DetailTagView(APIView):
             return Response({"message": "Multiple tags exist for the given slug"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-# read operations
-# write operations
-# high number of read operations and less number of write operations is ideal for a cache
-
+class ListTagView(APIView):
+    
+    def get(self, request):
+        try:
+            queryset = Tags.objects.all()
+            response_data = ReadTagsSerializer(instance=queryset, many=True).data
+            return Response(response_data, status=status.HTTP_200_OK)
+        except:
+            return Response({"message": "Unable to fetch tags list"}, status=status.HTTP_400_BAD_REQUEST)
