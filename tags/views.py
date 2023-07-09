@@ -14,8 +14,9 @@ second use of serializer is to convert orm object into json from server side
 Serializer(instance=object)```
 '''
 
+
 class CreateTagView(APIView):
-   
+
     def post(self, request):
         # IMPORTANT !!!
         # USE CASE 1
@@ -36,3 +37,17 @@ class CreateTagView(APIView):
         else:
             # return the serializer error
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DetailTagView(APIView):
+
+    def get(self, request, slug):
+        try:
+            tag_object = Tags.objects.get(slug=slug)
+            response_data = ReadTagsSerializer(instance=tag_object).data 
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Tags.DoesNotExist:
+            return Response({"message": "Tag not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Tags.MultipleObjectsReturned:
+            return Response({"message": "Multiple tags exist for the given slug"}, status=status.HTTP_400_BAD_REQUEST)
+
