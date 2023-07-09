@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.generics import RetrieveAPIView, ListAPIView
+from rest_framework.generics import RetrieveAPIView, ListAPIView, DestroyAPIView
 from tags.models import Tags
 from tags.serializers import WriteTagsSerializer, ReadTagsSerializer
 from django.utils.text import slugify
@@ -89,4 +89,23 @@ class ListTagV2View(ListAPIView):
     queryset = Tags.objects.all()
     serializer_class = ReadTagsSerializer
     pagination_class = StandardResultsSetPagination
+
+
+class DeleteTagView(APIView):
+
+    def delete(self, request, slug):
+        try:
+            tag_object = Tags.objects.get(slug=slug)
+            tag_object.delete()
+            return Response({"message": f"Tag deleted with slug {slug}"}, status=status.HTTP_200_OK)
+        except Tags.DoesNotExist:
+            return Response({"message": "Tag not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Tags.MultipleObjectsReturned:
+            return Response({"message": "Multiple tags exist for the given slug"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteTagV2View(DestroyAPIView):
+    queryset = Tags.objects.all()
+    lookup_field = "slug"
+
     
