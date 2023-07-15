@@ -7,6 +7,8 @@ from tags.serializers import WriteTagsSerializer, ReadTagsSerializer
 from django.utils.text import slugify
 from django.core.cache import cache
 from tags.utils import StandardResultsSetPagination
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 '''
 USE CASE 1
@@ -48,7 +50,7 @@ class CreateTagView(APIView):
 
 
 class DetailTagView(APIView):
-
+    
     def get(self, request, slug):
         try:
             cache_key = "tags" + str(slug)
@@ -85,10 +87,17 @@ class DetailTagV2View(RetrieveAPIView):
     serializer_class = ReadTagsSerializer
     lookup_field = "slug"
 
+# @method_decorator(cache_page(60 * 5), name='dispatch')
 class ListTagV2View(ListAPIView):
+    # authentication_classes = [] # is a list of classes
+    # pagination_class = None # is a single class
     queryset = Tags.objects.all()
     serializer_class = ReadTagsSerializer
-    pagination_class = StandardResultsSetPagination
+    
+    def list(self, request, *args, **kwargs):
+        print("request user", request.user)
+        response = super().list(request, *args, **kwargs)
+        return response
 
 
 class DeleteTagView(APIView):
