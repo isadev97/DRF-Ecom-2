@@ -134,13 +134,13 @@ CACHES = {
     }
 }
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'authentication.permissions.IsUserAuthenticated',
+        'authentication.permissions.IsActiveUser',
     ),
     'DEFAULT_PAGINATION_CLASS': (
         'tags.utils.StandardResultsSetPagination'

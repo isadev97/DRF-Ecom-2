@@ -9,6 +9,7 @@ from django.core.cache import cache
 from tags.utils import StandardResultsSetPagination
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from authentication.permissions import IsAdminUser
 
 '''
 USE CASE 1
@@ -21,7 +22,10 @@ Serializer(instance=object)```
 
 
 class CreateTagView(APIView):
-
+    
+    
+    permission_classes = (IsAdminUser, )
+    
     def post(self, request):
         # IMPORTANT !!!
         # USE CASE 1
@@ -87,7 +91,7 @@ class DetailTagV2View(RetrieveAPIView):
     serializer_class = ReadTagsSerializer
     lookup_field = "slug"
 
-# @method_decorator(cache_page(60 * 5), name='dispatch')
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class ListTagV2View(ListAPIView):
     # authentication_classes = [] # is a list of classes
     # pagination_class = None # is a single class
