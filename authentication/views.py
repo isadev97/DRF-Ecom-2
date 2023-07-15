@@ -8,6 +8,9 @@ from django.contrib.auth.models import auth
 # Create your views here.
 class SignUpView(APIView):
     
+    authentication_classes = []
+    permission_classes = []
+    
     def post(self, request):
         username = request.data['username']
         email = request.data['email']
