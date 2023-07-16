@@ -12,6 +12,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from authentication.authentication import ThirdPartyAuthentication
 from authentication.utils import CustomRateThrottle
 from django.conf import settings
+from django.core.cache import cache
+
 
 # Create your views here.
 class SignUpView(APIView):
@@ -56,3 +58,13 @@ class UserListView(ListAPIView):
         print("request user username", self.request.user.username)
         queryset = User.objects.all()
         return queryset
+    
+    def list(self, request, *args, **kwargs):
+        # storing the over all api cnt in cache
+        # cache_key = "users-list-api-cnt"
+        # cached_data = cache.get(cache_key, 0)
+        # if cached_data is not None and cached_data >= 10:
+        #     return Response({"message" : "Error heavy traffic is going on"})
+        # cache.set(cache_key, cached_data + 1)
+        response = super().list(request, *args, **kwargs)
+        return response
