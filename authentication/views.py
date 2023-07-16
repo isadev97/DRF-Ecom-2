@@ -4,6 +4,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import auth
+from rest_framework.generics import ListAPIView
+from authentication.models import User
+from authentication.serializers import ReadUserSerializer
+from authentication.permissions import IsAdminUser, DummyPermission1, DummyPermission2
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from authentication.authentication import ThirdPartyAuthentication
+from django.conf import settings
 
 # Create your views here.
 class SignUpView(APIView):
@@ -33,3 +40,17 @@ class SignUpView(APIView):
             return Response({"error": True, "msg" : "Something went wrong"}, status=status.HTTP_400_BAD_REQUEST)
             
  
+class UserListView(ListAPIView):
+    # Doing OR for authentication classes
+    # authentication_classes = (ThirdPartyAuthentication, JWTAuthentication)
+    # Doing OR for permission classes
+    # permission_classes = (DummyPermission1 | DummyPermission2, )  
+    authentication_classes = (ThirdPartyAuthentication, JWTAuthentication)
+    permission_classes = (IsAdminUser, )
+    serializer_class = ReadUserSerializer
+    
+    def get_queryset(self):
+        print("request user id", self.request.user.id)
+        print("request user username", self.request.user.username)
+        queryset = User.objects.all()
+        return queryset
