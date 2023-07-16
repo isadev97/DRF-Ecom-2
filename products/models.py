@@ -12,4 +12,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
      
-    
+# product = Product.objects.get(pk=id)
+# [1, 2, 3, 4, 5] => list of unique tags ids 
+# product.tags.set([1, 2, 3, 4, 5])
+# this will create the mapping in products_product_tags table
