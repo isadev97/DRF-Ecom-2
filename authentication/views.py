@@ -10,6 +10,7 @@ from authentication.serializers import ReadUserSerializer
 from authentication.permissions import IsAdminUser, DummyPermission1, DummyPermission2
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from authentication.authentication import ThirdPartyAuthentication
+from authentication.utils import CustomRateThrottle
 from django.conf import settings
 
 # Create your views here.
@@ -48,6 +49,7 @@ class UserListView(ListAPIView):
     authentication_classes = (ThirdPartyAuthentication, JWTAuthentication)
     permission_classes = (IsAdminUser, )
     serializer_class = ReadUserSerializer
+    throttle_classes = (CustomRateThrottle, )
     
     def get_queryset(self):
         print("request user id", self.request.user.id)
