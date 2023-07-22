@@ -6,6 +6,8 @@ from products.serializers import WriteProductSerializer
 from products.models import Product
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from django.utils.text import slugify
+from products.serializers import ReadProductSerializer
+from tags.utils import StandardResultsSetPagination
 
 # Create your views here.
 class CreateProductView(APIView):    
@@ -34,4 +36,6 @@ class DetailProductView(RetrieveAPIView):
     pass 
 
 class ListProductView(ListAPIView):
-    pass
+    queryset = Product.objects.all()
+    serializer_class = ReadProductSerializer
+    pagination_class = StandardResultsSetPagination 
