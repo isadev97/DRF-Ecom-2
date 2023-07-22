@@ -30,10 +30,9 @@ class CreateProductView(APIView):
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 class DetailProductView(RetrieveAPIView):
-    # queryset = Tags.objects.all()
-    # serializer_class = ReadTagsSerializer
-    # lookup_field = "slug"
-    pass 
+    queryset = Product.objects.all()
+    serializer_class = ReadProductSerializer
+    lookup_field = "slug"
 
 class ListProductView(ListAPIView):
     queryset = Product.objects.all()
