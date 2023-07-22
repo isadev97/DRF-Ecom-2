@@ -43,8 +43,8 @@ class ListProductView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ReadProductSerializer
     pagination_class = StandardResultsSetPagination 
+    ordering = ["-id"] # default ordering
     filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
     ordering_fields = ['id', 'created_at'] # override the default ordering i.e custom ordering
-    ordering = ["-id"] # default ordering
     search_fields = ['^name']
     filterset_fields = ['price', 'tags']

@@ -98,6 +98,7 @@ class ListTagV2View(ListAPIView):
     # pagination_class = None # is a single class
     queryset = Tags.objects.all()
     serializer_class = ReadTagsSerializer
+    ordering = ["-id"]
     
     def list(self, request, *args, **kwargs):
         print("request user", request.user)
