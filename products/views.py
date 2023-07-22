@@ -8,6 +8,8 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from django.utils.text import slugify
 from products.serializers import ReadProductSerializer
 from tags.utils import StandardResultsSetPagination
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 class CreateProductView(APIView):    
@@ -36,8 +38,13 @@ class DetailProductView(RetrieveAPIView):
     lookup_field = "slug"
 
 class ListProductView(ListAPIView):
+    authentication_classes = []
+    permission_classes = []
     queryset = Product.objects.all()
     serializer_class = ReadProductSerializer
     pagination_class = StandardResultsSetPagination 
-    
-  
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
+    ordering_fields = ['id', 'created_at'] # override the default ordering i.e custom ordering
+    ordering = ["-id"] # default ordering
+    search_fields = ['^name']
+    filterset_fields = ['price', 'tags']
