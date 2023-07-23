@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'products',
     'django_filters',
     'django_crontab',
+    'orders'
 ]
 
 MIDDLEWARE = [

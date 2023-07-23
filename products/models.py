@@ -6,6 +6,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=100)
     description = models.TextField(null=True)
+    # price and quantity is at the time of inventory
     price = models.BigIntegerField()
     quantity = models.BigIntegerField(default=0)
     tags = models.ManyToManyField(Tags, blank=True)
