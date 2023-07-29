@@ -11,6 +11,7 @@ from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from authentication.permissions import IsAdminUser
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from tags.tasks import process
 
 '''
 USE CASE 1
@@ -122,5 +123,17 @@ class DeleteTagView(APIView):
 class DeleteTagV2View(DestroyAPIView):
     queryset = Tags.objects.all()
     lookup_field = "slug"
+    
 
+class DummyApiView(APIView):
+    authentication_classes = []
+    permission_classes = []
+    
+    def post(self, request):
+        number = request.data.get('number')
+        try:
+            process.delay(int(number))
+            return Response({"message": "Process completed"}, status=status.HTTP_200_OK)
+        except:
+            return Response({"message": "Not a valid input number"}, status=status.HTTP_400_BAD_REQUEST)
     
